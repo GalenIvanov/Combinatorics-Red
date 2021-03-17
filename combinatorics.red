@@ -30,7 +30,7 @@ atomic-to-reduced: func [
     collect [
         foreach base range width [
             keep n % base
-            n: n / base
+            n: to integer! n / base
         ]
     ]
 ]
@@ -80,5 +80,10 @@ permutations: func [
     
 ]
 
-foreach p permutations [ 1 2 3 ] [ print p ]
-foreach p permutations "code" [ print p ]
+prin "All permutations of [a b c]: "
+print mold permutations [a b c]
+print ["Original arrangement:" mold n-permutation [a b c] 0]
+print ["Third arrangement:" mold n-permutation [a b c] 2]
+print ["Last arrangemen:" mold n-permutation [a b c] 5]
+print {All permutations of "abc"}
+print mold permutations "abc"

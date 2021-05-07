@@ -80,6 +80,18 @@ permutations: func [
     
 ]
 
+nCk: function [
+    { Calculates the binomial coefficient. a.k.a n choose k  }
+    n [integer!]  "size of the set"
+	k [integer!]  "size of the subset to get from n"
+][
+    ;f!: :factorial
+	;(f! n) / ((f! k) * f! (n - k))
+	p: 1
+	repeat i k [p: n + 1 - i / i * p]
+	to 1 p
+]
+
 prin "All permutations of [a b c]: "
 print mold permutations [a b c]
 print ["Original arrangement:" mold n-permutation [a b c] 0]
@@ -87,3 +99,8 @@ print ["Third arrangement:" mold n-permutation [a b c] 2]
 print ["Last arrangemen:" mold n-permutation [a b c] 5]
 print {All permutations of "abc"}
 print mold permutations "abc"
+
+print "nCk tests:"
+print ["5 choose 2 ->" nCk 5 2]
+print ["7 choose 3 ->" nCk 7 3]
+print ["8 choose 4 ->" nCk 8 4]

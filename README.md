@@ -7,3 +7,10 @@ https://code.jsoftware.com/wiki/Doc/Articles/Play121
 
 nCk - binomial coefficient, or `n choose k`
 
+# To do:
+
+* odometer
+* power set
+* combinations
+
+

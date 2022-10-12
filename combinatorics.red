@@ -4,6 +4,12 @@ Red [
     Version: 0.1
 ]
 
+; What's needed:
+; vector dialect for more elegant and succinct presentation of the algorithms
+; Combinations
+; Power set
+
+
 factorial: func [ 
    { Works for n up to 12 } 
     n [ integer! ]
@@ -15,10 +21,31 @@ range: func [
     { Generates a list 1..n}
     n [ integer! ]
 ] [
-    r: make block! n
     collect/into [
         repeat i n [ keep i ]
-    ] r
+    ] make block! n
+]
+
+mixed-base: function [
+    {Converts an integer to a mixed base number}
+    n    [integer!]
+    base [block!]
+][
+    d: make block! length? base
+    foreach b reverse copy base [
+        insert d n % b
+        n: to-integer n / b
+    ]
+    d
+]
+
+odometer: function [
+    {Constructs a block of ranged permutations with sizes given in the input block} 
+    bases [block!]
+][
+    p: 1
+	foreach n bases [p: p * n]
+	collect [repeat n p [keep/only mixed-base n - 1 bases]]
 ]
 
 atomic-to-reduced: func [
@@ -89,7 +116,7 @@ nCk: function [
 	;(f! n) / ((f! k) * f! (n - k))
 	p: 1
 	repeat i k [p: n + 1 - i / i * p]
-	to 1 p
+	to-integer p
 ]
 
 prin "All permutations of [a b c]: "
@@ -104,3 +131,6 @@ print "nCk tests:"
 print ["5 choose 2 ->" nCk 5 2]
 print ["7 choose 3 ->" nCk 7 3]
 print ["8 choose 4 ->" nCk 8 4]
+
+print "Odometer test:"
+foreach r odometer [2 3 4][probe r]

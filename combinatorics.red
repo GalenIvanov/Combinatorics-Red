@@ -44,8 +44,8 @@ odometer: function [
     bases [block!]
 ][
     p: 1
-	foreach n bases [p: p * n]
-	collect [repeat n p [keep/only mixed-base n - 1 bases]]
+    foreach n bases [p: p * n]
+    collect [repeat n p [keep/only mixed-base n - 1 bases]]
 ]
 
 atomic-to-reduced: func [
@@ -110,13 +110,13 @@ permutations: func [
 nCk: function [
     { Calculates the binomial coefficient. a.k.a n choose k  }
     n [integer!]  "size of the set"
-	k [integer!]  "size of the subset to get from n"
+    k [integer!]  "size of the subset to get from n"
 ][
     ;f!: :factorial
-	;(f! n) / ((f! k) * f! (n - k))
-	p: 1
-	repeat i k [p: n + 1 - i / i * p]
-	to-integer p
+    ;(f! n) / ((f! k) * f! (n - k))
+    p: 1
+    repeat i k [p: n + 1 - i / i * p]
+    to-integer p
 ]
 
 prin "All permutations of [a b c]: "

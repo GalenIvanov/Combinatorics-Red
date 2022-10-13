@@ -44,12 +44,8 @@ replicate: function [
     src   [series!]
     times [integer! block!] {If block! it should be the same length as src}
 ][
-    if number? times [
-        lengths: copy []
-        insert/dup lengths times length? src
-        times: lengths
-    ]
-    res: make block! length? src ; product times
+    if number? times [times: append/dup to-block times times (length? src) - 1]
+    res: make block! product times
     repeat n length? src [append/dup res src/:n times/:n]
     if string? src [res: rejoin res]
     res

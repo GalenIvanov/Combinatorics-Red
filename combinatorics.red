@@ -7,7 +7,6 @@ Red [
 ; What's needed:
 ; vector dialect for more elegant and succinct presentation of the algorithms
 ; Combinations
-; Power set
 
 ; from-mixed-base
 

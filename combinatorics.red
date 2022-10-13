@@ -1,6 +1,6 @@
 Red [
     Title: "Combinatorics"
-    Author: "Galen Ivanöv"
+    Author: "Galen Ivanov"
     Version: 0.1
 ]
 
@@ -22,7 +22,7 @@ factorial: func [
 ]
 
 range: func [
-    { Generates a list 1..n}
+    {Generates a list 1..n}
     n [ integer! ]
 ][
     collect/into [
@@ -75,8 +75,8 @@ odometer: function [
     bases [block!]
 ][
     ; Currently it's 0-based
- ; Should I change it to reflect Red's 1-based indexing?
- ; That will influence power-set, where I'll need to subtract 1 from masks
+    ; Should I change it to reflect Red's 1-based indexing?
+    ; That will influence power-set, where I'll need to subtract 1 from masks
     collect [repeat n product bases [keep/only mixed-base n - 1 bases]]
 ]
 
@@ -103,7 +103,7 @@ atomic-to-reduced: func [
 ]
 
 reduced-to-standard: func [
-    { converts the reduced representation of a permutation to standard }
+    {Converts the reduced representation of a permutation to standard}
     p [ series! ] { p must be in REVERSE order }
 ][
     std: copy []
@@ -117,8 +117,8 @@ reduced-to-standard: func [
 ]
 
 n-permutation: func [
-    { Generates the n-th permuatation of the series 
-      The original series has permutation number 0 }
+    {Generates the n-th permuatation of the series 
+      The original series has permutation number 0}
     block [ series! ]
     n [ integer! ]
 ][
@@ -131,7 +131,7 @@ n-permutation: func [
 ]
 
 permutations: func [
-   { Generates all permutations of a series }
+   {Generates all permutations of a series}
     block [ series! ]
     
 ][
@@ -148,7 +148,7 @@ permutations: func [
 ]
 
 nCk: function [
-    { Calculates the binomial coefficient. a.k.a n choose k  }
+    {Calculates the binomial coefficient. a.k.a n choose k }
     n [integer!]  "size of the set"
     k [integer!]  "size of the subset to get from n"
 ][
@@ -181,4 +181,4 @@ nCk: function [
 ;probe replicate t 3
 
 probe power-set [1 2 3]
-probe power-set "Red"
+probe power-set "Red"  ; The empty set is now an emtpy block. Should it be an empty string for string arguments?

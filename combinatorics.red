@@ -17,14 +17,14 @@ Red [
 factorial: func [ 
    { Works for n up to 12 } 
     n [ integer! ]
-] [
+][
     either n < 1 [ return 1 ] [ n * factorial n - 1 ]
 ]
 
 range: func [
     { Generates a list 1..n}
     n [ integer! ]
-] [
+][
     collect/into [
         repeat i n [ keep i ]
     ] make block! n
@@ -93,7 +93,7 @@ atomic-to-reduced: func [
       It is reversed in order to avoid one additional reversal in "reduced-to-standard" function }
     n [ integer! ] 
     width [ integer! ]
-] [
+][
     collect [
         foreach base range width [
             keep n % base
@@ -105,7 +105,7 @@ atomic-to-reduced: func [
 reduced-to-standard: func [
     { converts the reduced representation of a permutation to standard }
     p [ series! ] { p must be in REVERSE order }
-] [
+][
     std: copy []
     foreach n p [
         forall std [
@@ -121,7 +121,7 @@ n-permutation: func [
       The original series has permutation number 0 }
     block [ series! ]
     n [ integer! ]
-] [
+][
     indeces: reduced-to-standard atomic-to-reduced n length? block
     collect [
         foreach idx indeces [
@@ -134,7 +134,7 @@ permutations: func [
    { Generates all permutations of a series }
     block [ series! ]
     
-] [
+][
    str?: string? block
     n: factorial length? block
     p: make block! n

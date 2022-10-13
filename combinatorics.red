@@ -40,7 +40,7 @@ product: function [
 ]
 
 replicate: function [
-    {Replicates each element of src} 
+    {Creates a new series with each element of src replicated accordind to times} 
     src   [series!]
     times [integer! block!] {If block! it should be the same length as src}
 ][
@@ -104,12 +104,13 @@ atomic-to-reduced: func [
     n [ integer! ] 
     width [ integer! ]
 ][
-    collect [
-        foreach base range width [
-            keep n % base
-            n: to integer! n / base
-        ]
-    ]
+    ;collect [
+    ;    foreach base range width [
+    ;        keep n % base
+    ;        n: to integer! n / base
+    ;    ]
+    ;]
+	reverse mixed-base n reverse range width
 ]
 
 reduced-to-standard: func [

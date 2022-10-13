@@ -6,7 +6,7 @@ Red [
 
 ; What's needed:
 ; vector dialect for more elegant and succinct presentation of the algorithms
-; Combinations
+; Faster Combinations (recursive implementation?)
 
 ; from-mixed-base
 
@@ -74,6 +74,20 @@ odometer: function [
     ; Should I change it to reflect Red's 1-based indexing?
     ; That will influence power-set, where I'll need to subtract 1 from masks
     collect [repeat n product bases [keep/only mixed-base n - 1 bases]]
+]
+
+combinations: function [
+    {Generates all the combinations of k items out of src}
+    src [series!]    
+    k   [integer!] 
+][
+    ; Inefficient, because initially generates all 2 ** length? src masks
+    masks: odometer replicate to-block 2 length? src
+    reverse collect [
+        foreach mask masks [
+            if k = sum mask [keep/only replicate src mask]
+        ]    
+    ]
 ]
 
 power-set: function [
@@ -169,12 +183,15 @@ nCk: function [
 ;print ["8 choose 4 ->" nCk 8 4]
 
 ;print "Odometer test:"
-;foreach r odometer [2 3 4][probe r]
+;foreach r odometer [2 2 2][probe r]
 
 ;probe replicate [1 2 3] [3 2 1]
 ;probe replicate "abcd" [1 2 3 0]
 ;t: to-block now/date
 ;probe replicate t 3
 
-probe power-set [1 2 3]
-probe power-set "Red"  ; The empty set is now an emtpy block. Should it be an empty string for string arguments?
+;probe power-set [1 2 3]
+;probe power-set "Red"  ; The empty set is now an emtpy block. Should it be an empty string for string arguments?
+
+probe combinations [1 2 3 4] 2
+probe combinations "abcde" 3

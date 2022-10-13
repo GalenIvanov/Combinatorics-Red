@@ -9,6 +9,11 @@ Red [
 ; Combinations
 ; Power set
 
+; from-mixed-base
+
+; ----------------------------
+; ---- Helper functions ------
+; ----------------------------
 
 factorial: func [ 
    { Works for n up to 12 } 
@@ -26,8 +31,33 @@ range: func [
     ] make block! n
 ]
 
+product: function [
+    {Calculates the product of a block of numbers}
+    series [block!] {A block of numbers}
+][
+    p: 1
+ foreach n series [p: p * n]
+ p
+]
+
+replicate: function [
+    {Replicates each element of src} 
+    src   [series!]
+    times [integer! block!] {If block! it should be the same length as src}
+][
+    if number? times [
+        lengths: copy []
+        insert/dup lengths times length? src
+        times: lengths
+    ]
+    res: make block! length? src ; product times
+    repeat n length? src [append/dup res src/:n times/:n]
+    if string? src [res: rejoin res]
+    res
+]
+
 mixed-base: function [
-    {Converts an integer to a mixed base number}
+    {Converts an integer to a block of mixed base numbers}
     n    [integer!]
     base [block!]
 ][
@@ -39,13 +69,24 @@ mixed-base: function [
     d
 ]
 
+; -----------------------------------------------------
+
 odometer: function [
     {Constructs a block of ranged permutations with sizes given in the input block} 
     bases [block!]
 ][
-    p: 1
-    foreach n bases [p: p * n]
-    collect [repeat n p [keep/only mixed-base n - 1 bases]]
+    ; Currently it's 0-based
+ ; Should I change it to reflect Red's 1-based indexing?
+ ; That will influence power-set, where I'll need to subtract 1 from masks
+    collect [repeat n product bases [keep/only mixed-base n - 1 bases]]
+]
+
+power-set: function [
+    {Generates a power set of a set}
+    src [series!]
+][
+    masks: odometer replicate to-block 2 length? src
+    collect [foreach mask masks [keep/only replicate src reverse mask]]
 ]
 
 atomic-to-reduced: func [
@@ -119,18 +160,26 @@ nCk: function [
     to-integer p
 ]
 
-prin "All permutations of [a b c]: "
-print mold permutations [a b c]
-print ["Original arrangement:" mold n-permutation [a b c] 0]
-print ["Third arrangement:" mold n-permutation [a b c] 2]
-print ["Last arrangemen:" mold n-permutation [a b c] 5]
-print {All permutations of "abc"}
-print mold permutations "abc"
+;prin "All permutations of [a b c]: "
+;print mold permutations [a b c]
+;print ["Original arrangement:" mold n-permutation [a b c] 0]
+;print ["Third arrangement:" mold n-permutation [a b c] 2]
+;print ["Last arrangemen:" mold n-permutation [a b c] 5]
+;print {All permutations of "abc"}
+;print mold permutations "abc"
+;
+;print "nCk tests:"
+;print ["5 choose 2 ->" nCk 5 2]
+;print ["7 choose 3 ->" nCk 7 3]
+;print ["8 choose 4 ->" nCk 8 4]
 
-print "nCk tests:"
-print ["5 choose 2 ->" nCk 5 2]
-print ["7 choose 3 ->" nCk 7 3]
-print ["8 choose 4 ->" nCk 8 4]
+;print "Odometer test:"
+;foreach r odometer [2 3 4][probe r]
 
-print "Odometer test:"
-foreach r odometer [2 3 4][probe r]
+;probe replicate [1 2 3] [3 2 1]
+;probe replicate "abcd" [1 2 3 0]
+;t: to-block now/date
+;probe replicate t 3
+
+probe power-set [1 2 3]
+probe power-set "Red"

@@ -35,8 +35,8 @@ product: function [
     series [block!] {A block of numbers}
 ][
     p: 1
- foreach n series [p: p * n]
- p
+    foreach n series [p: p * n]
+    p
 ]
 
 replicate: function [

@@ -5,10 +5,13 @@ Red [
 ]
 
 ; What's needed:
-; vector dialect for more elegant and succinct presentation of the algorithms
 ; Faster Combinations (recursive implementation?)
-
-; from-mixed-base
+; COmbinations with replacement
+; Cartesian product
+; Variations - https://www.mathreference.org/index/page/id/52/lg/en
+; general to-base and from-base functions
+; iterators for permutations and combinations
+; vector dialect for more elegant and succinct presentation of the algorithms
 
 ; ----------------------------
 ; ---- Helper functions ------
@@ -16,17 +19,17 @@ Red [
 
 factorial: func [ 
    { Works for n up to 12 } 
-    n [ integer! ]
+    n [integer!]
 ][
-    either n < 1 [ return 1 ] [ n * factorial n - 1 ]
+    either n < 1 [return 1][n * factorial n - 1]
 ]
 
 range: func [
     {Generates a list 1..n}
-    n [ integer! ]
+    n [integer!]
 ][
     collect/into [
-        repeat i n [ keep i ]
+        repeat i n [keep i]
     ] make block! n
 ]
 
@@ -98,24 +101,9 @@ power-set: function [
     collect [foreach mask masks [keep/only replicate src reverse mask]]
 ]
 
-atomic-to-reduced: func [
-    { Converts a permuatation number from atomic to REVERSED reduced representation
-      It is reversed in order to avoid one additional reversal in "reduced-to-standard" function }
-    n [ integer! ] 
-    width [ integer! ]
-][
-    ;collect [
-    ;    foreach base range width [
-    ;        keep n % base
-    ;        n: to integer! n / base
-    ;    ]
-    ;]
-	reverse mixed-base n reverse range width
-]
-
 reduced-to-standard: func [
     {Converts the reduced representation of a permutation to standard}
-    p [ series! ] { p must be in REVERSE order }
+    p [series!] { p must be in REVERSE order }
 ][
     std: copy []
     foreach n p [
@@ -127,13 +115,14 @@ reduced-to-standard: func [
     std
 ]
 
-n-permutation: func [
+n-permutation: function [
     {Generates the n-th permuatation of the series 
       The original series has permutation number 0}
-    block [ series! ]
-    n [ integer! ]
+    block [series!]
+    n [integer!]
 ][
-    indeces: reduced-to-standard atomic-to-reduced n length? block
+    atomic-to-reduced: reverse mixed-base n reverse range length? block
+    indeces: reduced-to-standard atomic-to-reduced
     collect [
         foreach idx indeces [
             keep block/(idx + 1)
@@ -143,19 +132,17 @@ n-permutation: func [
 
 permutations: func [
    {Generates all permutations of a series}
-    block [ series! ]
+    block [series!]
     
 ][
    str?: string? block
     n: factorial length? block
-    p: make block! n
     collect/into [
         repeat i n [
             n-perm: n-permutation block i - 1
-            keep/only either str?[ rejoin n-perm ] [ n-perm ] 
+            keep/only either str? [rejoin n-perm][n-perm] 
         ]
-    ] p
-    
+    ] make block! n
 ]
 
 nCk: function [
@@ -170,8 +157,8 @@ nCk: function [
     to-integer p
 ]
 
-;prin "All permutations of [a b c]: "
-;print mold permutations [a b c]
+prin "All permutations of [a b c]: "
+print mold permutations [a b c]
 ;print ["Original arrangement:" mold n-permutation [a b c] 0]
 ;print ["Third arrangement:" mold n-permutation [a b c] 2]
 ;print ["Last arrangemen:" mold n-permutation [a b c] 5]
@@ -182,6 +169,7 @@ nCk: function [
 ;print ["5 choose 2 ->" nCk 5 2]
 ;print ["7 choose 3 ->" nCk 7 3]
 ;print ["8 choose 4 ->" nCk 8 4]
+;print ["20 choose 10 ->" nCk 20 10]
 
 ;print "Odometer test:"
 ;foreach r odometer [2 2 2][probe r]
@@ -196,3 +184,8 @@ nCk: function [
 
 probe combinations [1 2 3 4] 2
 probe combinations "abcde" 3
+
+; The following test takes 0:01:09.08193 on my machine to complete
+;t: now/precise
+;combinations range 20 10 
+;probe difference now/precise t

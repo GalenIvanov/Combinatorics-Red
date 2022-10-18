@@ -58,15 +58,15 @@ pascals-triangle: function [
 ][
     T: make block! n
     row: make block! n
-	append/dup row 1 n
-	append/only T copy row
-	repeat r n - 1 [
-		clear head row
-		left: 0
-		repeat c n - r [append row left: left + T/:r/:c]
-		append/only T copy row
-	]
-    T	
+    append/dup row 1 n
+    append/only T copy row
+    repeat r n - 1 [
+        clear head row
+        left: 0
+        repeat c n - r [append row left: left + T/:r/:c]
+        append/only T copy row
+    ]
+    T    
 ]
 
 replicate: function [
@@ -131,30 +131,30 @@ combinations: function [
 n-combination: function [
     {Finds the n-th combination of k items from src}
     src [series!]
-	k   [integer!]
-	n   [integer!]
+    k   [integer!]
+    n   [integer!]
 ][
     ; uses combinatorial number system
-	; https://en.wikipedia.org/wiki/Combinatorial_number_system
-	
-	comb: make block! k
-	row: k + 1 ; Red uses 1-based indexing
-	if n > 1 [
-		until [
-			col: 0
-			until [pascal/:row/(col: col + 1) >= n]
-			if zero? col: col - 1 [break]
-			n: n - pascal/:row/:col
-			append comb row + col - 1
-			row: row - 1
-			col = 0
-		]
-	]	
-	while [row > 1][append comb row: row - 1]
-	reverse comb
-	forall comb [comb/1: src/(comb/1)]
-	if string? src [comb: rejoin comb]
-	comb
+    ; https://en.wikipedia.org/wiki/Combinatorial_number_system
+    
+    comb: make block! k
+    row: k + 1 ; Red uses 1-based indexing
+    if n > 1 [
+        until [
+            col: 0
+            until [pascal/:row/(col: col + 1) >= n]
+            if zero? col: col - 1 [break]
+            n: n - pascal/:row/:col
+            append comb row + col - 1
+            row: row - 1
+            col = 0
+        ]
+    ]    
+    while [row > 1][append comb row: row - 1]
+    reverse comb
+    forall comb [comb/1: src/(comb/1)]
+    if string? src [comb: rejoin comb]
+    comb
 ]
 
 reduced-to-standard: func [
@@ -216,11 +216,11 @@ nCk: function [
 
 nVk: function [
     {Number of variations of k items of n without repetition}
-	n [integer!]
-	k [integer!]
+    n [integer!]
+    k [integer!]
 ][
     ;(factorial n) / factorial n - k ; math definition
-	product at range n k + 1
+    product at range n k + 1
 ]
 ;-----------------------
 ;--- Initializations ---

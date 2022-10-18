@@ -13,6 +13,9 @@ Red [
 ; iterators for permutations and combinations
 ; vector dialect for more elegant and succinct presentation of the algorithms
 
+; for inspiration: 
+;https://docs.python.org/3/library/itertools.html#
+
 ; ----------------------------
 ; ---- Helper functions ------
 ; ----------------------------
@@ -35,11 +38,35 @@ range: func [
 
 product: function [
     {Calculates the product of a block of numbers}
-    series [block!] {A block of numbers}
+    series [block! vector!] {A block of numbers}
 ][
     p: 1
     foreach n series [p: p * n]
     p
+]
+
+; Pascal's form:
+; 1  1  1  1  1  1
+; 1  2  3  4  5
+; 1  3  6 10
+; 1  4 10
+; 1  5
+; 1
+pascals-triangle: function [
+    {Creates the first n rows of the Pascal's triangle in Pascal form}
+    n [integer!] {Works for n up to 34}
+][
+    T: make block! n
+    row: make block! n
+	append/dup row 1 n
+	append/only T copy row
+	repeat r n - 1 [
+		clear head row
+		left: 0
+		repeat c n - r [append row left: left + T/:r/:c]
+		append/only T copy row
+	]
+    T	
 ]
 
 replicate: function [
@@ -79,6 +106,14 @@ odometer: function [
     collect [repeat n product bases [keep/only mixed-base n - 1 bases]]
 ]
 
+power-set: function [
+    {Generates a power set of a set}
+    src [series!]
+][
+    masks: odometer replicate to-block 2 length? src
+    collect [foreach mask masks [keep/only replicate src reverse mask]]
+]
+
 combinations: function [
     {Generates all the combinations of k items out of src}
     src [series!]    
@@ -93,12 +128,33 @@ combinations: function [
     ]
 ]
 
-power-set: function [
-    {Generates a power set of a set}
+n-combination: function [
+    {Finds the n-th combination of k items from src}
     src [series!]
+	k   [integer!]
+	n   [integer!]
 ][
-    masks: odometer replicate to-block 2 length? src
-    collect [foreach mask masks [keep/only replicate src reverse mask]]
+    ; uses combinatorial number system
+	; https://en.wikipedia.org/wiki/Combinatorial_number_system
+	
+	comb: make block! k
+	row: k + 1 ; Red uses 1-based indexing
+	if n > 1 [
+		until [
+			col: 0
+			until [pascal/:row/(col: col + 1) >= n]
+			if zero? col: col - 1 [break]
+			n: n - pascal/:row/:col
+			append comb row + col - 1
+			row: row - 1
+			col = 0
+		]
+	]	
+	while [row > 1][append comb row: row - 1]
+	reverse comb
+	forall comb [comb/1: src/(comb/1)]
+	if string? src [comb: rejoin comb]
+	comb
 ]
 
 reduced-to-standard: func [
@@ -157,8 +213,26 @@ nCk: function [
     to-integer p
 ]
 
-prin "All permutations of [a b c]: "
-print mold permutations [a b c]
+
+nVk: function [
+    {Number of variations of k items of n without repetition}
+	n [integer!]
+	k [integer!]
+][
+    ;(factorial n) / factorial n - k ; math definition
+	product at range n k + 1
+]
+;-----------------------
+;--- Initializations ---
+;-----------------------
+
+pascal: pascals-triangle 34
+
+;-----------------------
+
+
+;prin "All permutations of [a b c]: "
+;print mold permutations [a b c]
 ;print ["Original arrangement:" mold n-permutation [a b c] 0]
 ;print ["Third arrangement:" mold n-permutation [a b c] 2]
 ;print ["Last arrangemen:" mold n-permutation [a b c] 5]
@@ -182,10 +256,18 @@ print mold permutations [a b c]
 ;probe power-set [1 2 3]
 ;probe power-set "Red"  ; The empty set is now an emtpy block. Should it be an empty string for string arguments?
 
-probe combinations [1 2 3 4] 2
-probe combinations "abcde" 3
+;probe combinations [1 2 3 4] 2
+;probe combinations "abcde" 3
 
 ; The following test takes 0:01:09.08193 on my machine to complete
 ;t: now/precise
 ;combinations range 20 10 
 ;probe difference now/precise t
+
+probe n-combination "abcdefghi" 5 0
+probe n-combination "abcdefghi" 5 72
+probe n-combination "abcdefghi" 5 125
+
+foreach n range nCk 6 3 [print [mold n-combination [1 2 3 4 5 6] 3 n]]
+
+;print nVk 10 5

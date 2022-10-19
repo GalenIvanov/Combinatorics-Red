@@ -112,6 +112,21 @@ power-set: function [
     collect [foreach mask masks [keep/only replicate src reverse mask]]
 ]
 
+cartesian-product: function [
+    {Finds the cartesian product of the input series}
+    block [block!]
+][
+    lengths: make block! length? block
+    forall block [append lengths length? block/1]
+    collect [
+        foreach tuple odometer lengths [
+            keep/only collect [
+                repeat n length? tuple [keep block/:n/(1 + tuple/:n)]
+            ]
+        ]
+    ]
+]
+
 all-combinations: function [
     {Generates all the combinations of k items of src}
     src [series!]    
@@ -286,4 +301,6 @@ pascal: pascals-triangle 34
 ;foreach n range nCk 6 3 [print [mold n-combination [1 2 3 4 5 6] 3 n]]
 
 ;print nVk 10 5
-probe variations "abcd" 3
+;probe variations "abcd" 3
+
+probe cartesian-product [[1 2] [a b c] [+ -]]

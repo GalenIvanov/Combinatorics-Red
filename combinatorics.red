@@ -20,20 +20,11 @@ Red [
 ; ---- Helper functions ------
 ; ----------------------------
 
-factorial: func [ 
-   { Works for n up to 12 } 
-    n [integer!]
-][
-    either n < 1 [return 1][n * factorial n - 1]
-]
-
 range: func [
     {Generates a list 1..n}
     n [integer!]
 ][
-    collect/into [
-        repeat i n [keep i]
-    ] make block! n
+    collect/into [repeat i n [keep i]] make block! n
 ]
 
 product: function [
@@ -43,6 +34,13 @@ product: function [
     p: 1
     foreach n series [p: p * n]
     p
+]
+
+factorial: func [ 
+   { Works for n up to 12 } 
+    n [integer!]
+][
+    product range n
 ]
 
 ; Pascal's form:
@@ -114,8 +112,8 @@ power-set: function [
     collect [foreach mask masks [keep/only replicate src reverse mask]]
 ]
 
-combinations: function [
-    {Generates all the combinations of k items out of src}
+all-combinations: function [
+    {Generates all the combinations of k items of src}
     src [series!]    
     k   [integer!] 
 ][
@@ -145,16 +143,25 @@ n-combination: function [
             until [pascal/:row/(col: col + 1) >= n]
             if zero? col: col - 1 [break]
             n: n - pascal/:row/:col
-            append comb row + col - 1
+            insert comb src/(row + col - 1)
             row: row - 1
-            col = 0
+            zero? col
         ]
     ]    
-    while [row > 1][append comb row: row - 1]
-    reverse comb
-    forall comb [comb/1: src/(comb/1)]
+    while [row > 1][insert comb src/(row: row - 1)]
     if string? src [comb: rejoin comb]
     comb
+]
+
+combinations: function [
+    {Generates all the combinations of k items of src}
+    src [series!]
+    k   [integer!]
+][
+    size: nCk length? src k
+    collect/into [
+        foreach n range size [keep/only n-combination src k n]
+    ] make block! size
 ]
 
 reduced-to-standard: func [
@@ -163,9 +170,7 @@ reduced-to-standard: func [
 ][
     std: copy []
     foreach n p [
-        forall std [
-            if n <= std/1 [std/1: std/1 + 1]
-        ]
+        forall std [if n <= std/1 [std/1: std/1 + 1]]
         insert std n
     ]   
     std
@@ -179,11 +184,7 @@ n-permutation: function [
 ][
     atomic-to-reduced: reverse mixed-base n reverse range length? block
     indeces: reduced-to-standard atomic-to-reduced
-    collect [
-        foreach idx indeces [
-            keep block/(idx + 1)
-        ]
-    ] 
+    collect [foreach idx indeces [keep block/(idx + 1)]] 
 ]
 
 permutations: func [
@@ -236,8 +237,8 @@ pascal: pascals-triangle 34
 ;print ["Original arrangement:" mold n-permutation [a b c] 0]
 ;print ["Third arrangement:" mold n-permutation [a b c] 2]
 ;print ["Last arrangemen:" mold n-permutation [a b c] 5]
-;print {All permutations of "abc"}
-;print mold permutations "abc"
+;print {All permutations of "abcd"}
+;print mold permutations "abcd"
 ;
 ;print "nCk tests:"
 ;print ["5 choose 2 ->" nCk 5 2]
@@ -256,18 +257,23 @@ pascal: pascals-triangle 34
 ;probe power-set [1 2 3]
 ;probe power-set "Red"  ; The empty set is now an emtpy block. Should it be an empty string for string arguments?
 
-;probe combinations [1 2 3 4] 2
-;probe combinations "abcde" 3
-
+;probe all-combinations [1 2 3 4] 2
+;probe all-combinations "abcde" 3
 ; The following test takes 0:01:09.08193 on my machine to complete
 ;t: now/precise
-;combinations range 20 10 
+;all-combinations range 20 10 
 ;probe difference now/precise t
 
-probe n-combination "abcdefghi" 5 0
-probe n-combination "abcdefghi" 5 72
-probe n-combination "abcdefghi" 5 125
+;t: now/precise
+;combinations range 20 10  ; approximately 7 times faster than all-combinations 
+;probe difference now/precise t
 
-foreach n range nCk 6 3 [print [mold n-combination [1 2 3 4 5 6] 3 n]]
+probe combinations "abcdefghi" 3
+
+;probe n-combination "abcdefghi" 5 0
+;probe n-combination "abcdefghi" 5 72
+;probe n-combination "abcdefghi" 5 125
+
+;foreach n range nCk 6 3 [print [mold n-combination [1 2 3 4 5 6] 3 n]]
 
 ;print nVk 10 5

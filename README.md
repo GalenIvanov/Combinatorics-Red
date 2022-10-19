@@ -8,6 +8,7 @@ Basic combinatorics in Red language
 * number of variations
 * odometer
 * power set
+* Cartesian product
 
 Permutations are based on Eugene McDonnell's article "Representing a Permutation" in  "At play with J":
 
@@ -18,4 +19,3 @@ https://code.jsoftware.com/wiki/Doc/Articles/Play121
 * Cartesian product
 * Combinations with repetition
 * Variations with repetition
-

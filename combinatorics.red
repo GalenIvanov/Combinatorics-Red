@@ -6,9 +6,9 @@ Red [
 
 ; What's needed:
 ; Faster Combinations (recursive implementation?)
-; COmbinations with replacement
+; Combinations with repetition
+; Variations witt repetition
 ; Cartesian product
-; Variations - https://www.mathreference.org/index/page/id/52/lg/en
 ; general to-base and from-base functions
 ; iterators for permutations and combinations
 ; vector dialect for more elegant and succinct presentation of the algorithms
@@ -214,7 +214,6 @@ nCk: function [
     to-integer p
 ]
 
-
 nVk: function [
     {Number of variations of k items of n without repetition}
     n [integer!]
@@ -222,6 +221,16 @@ nVk: function [
 ][
     ;(factorial n) / factorial n - k ; math definition
     product at range n k + 1
+]
+
+variations: function [
+    {Finds all the k variations of src series}
+    src [series!]
+    k   [integer!]
+][
+    collect/into [
+        foreach c combinations src k [keep permutations c]
+    ] make block! nVk length? src k
 ]
 ;-----------------------
 ;--- Initializations ---
@@ -268,7 +277,7 @@ pascal: pascals-triangle 34
 ;combinations range 20 10  ; approximately 7 times faster than all-combinations 
 ;probe difference now/precise t
 
-probe combinations "abcdefghi" 3
+;probe combinations "abcdefghi" 3
 
 ;probe n-combination "abcdefghi" 5 0
 ;probe n-combination "abcdefghi" 5 72
@@ -277,3 +286,4 @@ probe combinations "abcdefghi" 3
 ;foreach n range nCk 6 3 [print [mold n-combination [1 2 3 4 5 6] 3 n]]
 
 ;print nVk 10 5
+probe variations "abcd" 3

@@ -63,6 +63,17 @@ Finds the binomial coefficient, or `n choose k` - the number of ways to choose a
 35
 ```
 
+## N-th combination
+
+Finds the n-th combination of k elements from a set
+
+```
+>>n-combination [1 2 3] 2 1  ; the first combination of 2 elements from [1 2 3]
+[1 2]
+n-combination [1 2 3] 2 3    ; the third (last) one -> nCk 3 2 is 3
+[2 3]
+```
+
 
 
 # To do:

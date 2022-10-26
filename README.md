@@ -69,6 +69,8 @@ n-combination [1 2 3] 2 3    ; the third (last) one -> nCk 3 2 is 3
 [2 3]
 ```
 
+Uses combinatorial number system: https://en.wikipedia.org/wiki/Combinatorial_number_system
+
 ## Combinations
 
 Finds all combinations of k elements of a series. It's done by generating every n-th combination in the range from 1 to `nCk (length? series) k`.
@@ -78,9 +80,11 @@ Finds all combinations of k elements of a series. It's done by generating every 
 [[Red Orange] [Red Yellow] [Orange Yellow] [Red Green] [Orange Green] [Yellow Green] [Red Cyan] [Orange Cyan] [Yellow Cyan] [Green Cyan]]
 ```
 
+There is also an `all-combinations` function that is presented only to demonstrate a naive brute-force approach to the problem. Given a set of n elements, we can construct all n-digit binary numbers. 1 means that the element is used and 0 - not used. We are interested only in binary representations that have exactly `k` `1`s in them. So we generate all numbers in the range from `0` to `2 ** n - 1`, and keep only those that have `k` ones in their binary representation. Then we extract the series elements at the positions of ones.
+
 ## N-th permutation
 
-`n-permutation` finds the n-th permutation of a series. (There are `n!` permutations total). 0-based.
+`n-permutation` finds the n-th permutation of a series using factorial number system. (There are `n!` permutations total). 0-based.
 
 ```
 >> n-permutation "abcdefghij" (factorial 10) - 1  ; the last permutation - i.e. series reversed
@@ -90,6 +94,18 @@ Finds all combinations of k elements of a series. It's done by generating every 
 `n-permutation` is based on Eugene McDonnell's article "Representing a Permutation" in  "At play with J":
 https://code.jsoftware.com/wiki/Doc/Articles/Play121
 
+## Permutations
+
+Generates all permutations of a series. Calls `n-permuation` for all numbers in the range from 0 to `(factorial length? series) - 1`
+
+```
+>>permutations [a b c]
+[[a b c] [a c b] [b a c] [b c a] [c a b] [c b a]]
+```
+
+## Number of variations
+
+`nVk` calculates the number of variations of k elements of set of n elements without repetition}
 
 # To do:
 * Combinations with repetition

@@ -155,7 +155,7 @@ all-combinations: function [
     k   [integer!] 
 ][
     ; Inefficient, because initially generates all 2 ** length? src masks
-	; shown here just for demonstration
+    ; shown here just for demonstration
     masks: odometer replicate to-block 2 length? src
     reverse collect [
         foreach mask masks [
@@ -210,7 +210,9 @@ n-permutation: function [
 ][
     atomic-to-reduced: reverse to-base n reverse range length? block
     indeces: reduced-to-standard atomic-to-reduced
-    collect [foreach idx indeces [keep block/(idx + 1)]] 
+    res: collect [foreach idx indeces [keep block/(idx + 1)]] 
+    if string? block [res: rejoin res]
+    res
 ]
 
 permutations: func [
@@ -221,15 +223,12 @@ permutations: func [
    str?: string? block
     n: factorial length? block
     collect/into [
-        repeat i n [
-            n-perm: n-permutation block i - 1
-            keep/only either str? [rejoin n-perm][n-perm] 
-        ]
+        repeat i n [keep/only n-permutation block i - 1]
     ] make block! n
 ]
 
 nVk: function [
-    {Number of variations of k items of n without repetition}
+    {Calculates the number of variations of k elements of set of n elements without repetition}
     n [integer!]
     k [integer!]
 ][
@@ -238,7 +237,7 @@ nVk: function [
 ]
 
 variations: function [
-    {Finds all the k variations of src series}
+    {Finds all the variations of k elements of src series}
     src [series!]
     k   [integer!]
 ][

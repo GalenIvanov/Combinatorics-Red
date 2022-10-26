@@ -14,7 +14,7 @@ Basic combinatorics in Red language
 
 ## Odometer
 
-Generates a block of ranged permutations of block of integers. it can be regarded as a set of netsed loops. Currently it is 0-based.
+Generates a block of ranged permutations of block of integers. It can be regarded as a set of nested loops. Currently it is 0-based.
 
 ```
 >> odometer [2 2 3]

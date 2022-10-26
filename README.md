@@ -10,11 +10,6 @@ Basic combinatorics in Red language
 * number of variations
 * variations
 
-Permutations are based on Eugene McDonnell's article "Representing a Permutation" in  "At play with J":
-
-https://code.jsoftware.com/wiki/Doc/Articles/Play121
-
-
 ## Odometer
 
 Generates a block of ranged permutations of block of integers. it can be regarded as a set of netsed loops. Currently it is 0-based.
@@ -65,7 +60,7 @@ Finds the binomial coefficient, or `n choose k` - the number of ways to choose a
 
 ## N-th combination
 
-Finds the n-th combination of k elements from a set. Uses combinatorial number system.
+`n-combination` finds the n-th combination of k elements from a set. Uses combinatorial number system.
 
 ```
 >>n-combination [1 2 3] 2 1  ; the first combination of 2 elements from [1 2 3]
@@ -76,12 +71,25 @@ n-combination [1 2 3] 2 3    ; the third (last) one -> nCk 3 2 is 3
 
 ## Combinations
 
-Finds all combinations of k elements of a series. Generates every n-th combination in the range from 1 to `nCk (length? series) k`.
+Finds all combinations of k elements of a series. It's done by generating every n-th combination in the range from 1 to `nCk (length? series) k`.
 
 ```
->>probe combinations [Red Orange Yellow Green Cyan] 3
-[[Red Orange Yellow] [Red Orange Green] [Red Yellow Green] [Orange Yellow Green] [Red Orange Cyan] [Red Yellow Cyan] [Orange Yellow Cyan] [Red Green Cyan] [Orange Green Cyan] [Yellow Green Cyan]]
+>>probe combinations [Red Orange Yellow Green Cyan] 2
+[[Red Orange] [Red Yellow] [Orange Yellow] [Red Green] [Orange Green] [Yellow Green] [Red Cyan] [Orange Cyan] [Yellow Cyan] [Green Cyan]]
 ```
+
+## N-th permutation
+
+`n-permutation` finds the n-th permutation of a series. (There are `n!` permutations total). 0-based.
+
+```
+>> n-permutation "abcdefghij" (factorial 10) - 1  ; the last permutation - i.e. series reversed
+== "jihgfedcba"
+```
+
+`n-permutation` is based on Eugene McDonnell's article "Representing a Permutation" in  "At play with J":
+https://code.jsoftware.com/wiki/Doc/Articles/Play121
+
 
 # To do:
 * Combinations with repetition

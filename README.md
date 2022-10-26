@@ -65,7 +65,7 @@ Finds the binomial coefficient, or `n choose k` - the number of ways to choose a
 
 ## N-th combination
 
-Finds the n-th combination of k elements from a set
+Finds the n-th combination of k elements from a set. Uses combinatorial number system.
 
 ```
 >>n-combination [1 2 3] 2 1  ; the first combination of 2 elements from [1 2 3]
@@ -74,7 +74,14 @@ n-combination [1 2 3] 2 3    ; the third (last) one -> nCk 3 2 is 3
 [2 3]
 ```
 
+## Combinations
 
+Finds all combinations of k elements of a series. Generates every n-th combination in the range from 1 to `nCk (length? series) k`.
+
+```
+>>probe combinations [Red Orange Yellow Green Cyan] 3
+[[Red Orange Yellow] [Red Orange Green] [Red Yellow Green] [Orange Yellow Green] [Red Orange Cyan] [Red Yellow Cyan] [Orange Yellow Cyan] [Red Green Cyan] [Orange Green Cyan] [Yellow Green Cyan]]
+```
 
 # To do:
 * Combinations with repetition
